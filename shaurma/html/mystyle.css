@@ -1,0 +1,104 @@
+#cart-element {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2px;
+  margin-left: 15px;
+  margin-right: 15px;
+  min-width: 0;
+  min-height: 0;
+  width: 20px;
+  height: 20px;
+}
+
+#navigator-type {
+  justify-content: start;
+}
+
+#card-list {
+  justify-content: center;
+}
+
+#option-elements {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+#footer-of-huinya {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+#main-form {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+#trademark {
+  text-align: center;
+}
+
+.add-in-the-cart {
+  width: 100px;
+  height: 40px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  justify-content: center;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.nav-link {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.shaurma-cards {
+  min-width: 18rem;
+}
+
+.gradient-custom-3 {
+  /* fallback for old browsers */
+  background: #84fab0;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(132, 250, 176, 0.5),
+    rgba(143, 211, 244, 0.5)
+  );
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(
+    to right,
+    rgba(132, 250, 176, 0.5),
+    rgba(143, 211, 244, 0.5)
+  );
+}
+.gradient-custom-4 {
+  /* fallback for old browsers */
+  background: #84fab0;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(
+    to right,
+    rgba(132, 250, 176, 1),
+    rgba(143, 211, 244, 1)
+  );
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(
+    to right,
+    rgba(132, 250, 176, 1),
+    rgba(143, 211, 244, 1)
+  );
+}
