@@ -8,6 +8,9 @@ const cookieParser = require('cookie-parser')
 const config = require('./config')
 const commonRoutes = require('./routes')
 const userRoutes = require('./routes/user')
+const shaurmaRoutes = require('./routes/shaurma')
+const cartRoutes = require('./routes/shop-cart')
+const additiveRoutes = require('./routes/additive')
 // Setup
 const apiServer = express()
 apiServer.set('APP_SECRET', config.secret)
@@ -33,6 +36,9 @@ apiServer.use(cookieParser())
 // Routes
 apiServer.use(commonRoutes)
 apiServer.use(userRoutes)
+apiServer.use(shaurmaRoutes)
+apiServer.use(cartRoutes)
+apiServer.use(additiveRoutes)
 
 // Export
 module.exports = apiServer

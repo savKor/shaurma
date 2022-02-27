@@ -1,36 +1,17 @@
-const mongoose = require('mongoose')
 const express = require('express')
-const cors = require('cors')
 
-const app = express()
-// turn off CORS
-app.use(cors())
+const mongoose = require('mongoose')
 
-app.get('/products/:id', (req, res, next) => {
-  res.json({ msg: 'This is CORS-enabled for all origins!' })
-})
+const shaurmaRoutes = express.Router()
 
-app.listen(80, () => {
-  console.log('CORS-enabled web server listening on port 80')
-})
+const jwtDecode = require('jwt-decode')
 
-// Обращение к базе данных
-const { Schema } = mongoose
+const Shaurma = require('../models/shaurma')
 
-mongoose.connect('mongodb://localhost:27017/shaurmadb', {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-})
-
-const shaurmaSchema = new Schema(
-  { image: String, sname: String, cost: Number, createdAt: Date },
-  { collection: 'shaurma' },
-)
-
-const Shaurma = mongoose.model('Shaurma', shaurmaSchema)
+const UserShaurma = require('../models/shop-cart')
 
 async function getShaurmaList() {
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve) => {
     Shaurma.find({}, (err, docs) => {
       resolve(docs)
     })
@@ -39,22 +20,63 @@ async function getShaurmaList() {
   return promise
 }
 
-app.get('/', (request, response) => {
-  response.send('<h1>Сервак запущен</h1>')
+shaurmaRoutes.get('/shaurma-list', async (request, response) => {
+  const userToken = request.get('x-access-token')
+  const operation = [getShaurmaList()]
+  let userShaurmaAddedInCart = []
+
+  if (userToken !== undefined) {
+    const decoded = jwtDecode(userToken)
+    operation.push(UserShaurma.findOne({ userId: decoded._id }))
+  }
+
+  const [shaurmaList, userShaurma] = await Promise.all(operation)
+
+  if (userShaurma) {
+    userShaurmaAddedInCart = userShaurma.shaurmaList
+  }
+
+  const shaurmaListWithShaurmaInfo = shaurmaList.map(function (shaurmaItem) {
+    const { _id, name, cost, image, createdAt } = shaurmaItem
+
+    const newShaurmaItem = {
+      _id,
+      name,
+      cost,
+      image,
+      createdAt,
+      inCart: userShaurmaAddedInCart.includes(shaurmaItem.id),
+    }
+    console.log(newShaurmaItem)
+    return newShaurmaItem
+  })
+
+  response.send(shaurmaListWithShaurmaInfo)
 })
 
-app.use('/shaurma-list', async (request, response) => {
-  const shaurmaList = await getShaurmaList()
-  console.log(shaurmaList)
-  response.send(shaurmaList)
+shaurmaRoutes.post('/shaurma-list/deleted', async (request, response) => {
+  const responseData = {
+    success: false,
+    data: {},
+    errors: [],
+  }
+
+  const userShaurmaAddedInCart = request.body.shaurmaId
+  const document = await Shaurma.findOne({ _id: userShaurmaAddedInCart })
+  if (document) {
+    Shaurma.deleteOne(
+      { _id: mongoose.Types.ObjectId(userShaurmaAddedInCart) },
+      () => {
+        const cartId = document._id
+        if (cartId) {
+          responseData.success = true
+          responseData.data.cartId = cartId
+        }
+
+        response.json(responseData)
+      },
+    )
+  }
 })
 
-app.listen(3000)
-
-/**
- * Ввести данные в поля регистрации
- * Передать их на бэкенд
- * На бекенде записать эти данные в объект
- * А так де захэштровать пароль
- * Этот объект добавить в базу данных пользователей
- */
+module.exports = shaurmaRoutes

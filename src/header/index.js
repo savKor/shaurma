@@ -1,7 +1,12 @@
-import { createNavbar } from './navbar/navbar'
+import {
+  createNavbar,
+  enableNavbar,
+  markShaurmaAddedInCartForNavbar,
+  markShaurmaDeletedInCartForNavbar,
+} from './navbar/navbar'
 
-export function createHeader() {
-  const navbarHTML = createNavbar()
+export function createHeader(shaurmaList, order) {
+  const navbarHTML = createNavbar(shaurmaList, order)
 
   const headerHTML = /* html */ `
         <header> 
@@ -9,4 +14,15 @@ export function createHeader() {
         </header>
     `
   return headerHTML
+}
+
+export function enableHeader(onAddInCart) {
+  enableNavbar(onAddInCart)
+}
+export function markShaurmaAddedInCartForHeader(shaurmaId, shaurmaList) {
+  markShaurmaAddedInCartForNavbar(shaurmaId, shaurmaList)
+}
+
+export function markShaurmaDeletedInCartForHeader(shaurmaId, shaurmaList) {
+  markShaurmaDeletedInCartForNavbar(shaurmaId, shaurmaList)
 }

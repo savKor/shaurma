@@ -1,46 +1,85 @@
-import { getRandomNumberForTheCoast } from './coast-generator/coast-generator'
-import { fetchShaurma } from '../../api/fetchArray'
+import { storage } from '../../storage/index'
+import {
+  changeStatusOfButton,
+  getDisabledButton,
+  getEnableButton,
+} from './button/button'
 
 function createListOfCards(shaurmaList) {
-  const minCoast = 100
-  const maxCoast = 330
   const listOfCards = []
 
   for (let i = 0; i < shaurmaList.length; i++) {
-    const nameOfShaurma = shaurmaList[i]
-    const randomNumber = getRandomNumberForTheCoast(minCoast, maxCoast)
+    const nameOfShaurma = shaurmaList[i].name
+    const costOfShaurma = shaurmaList[i].cost
+    const idOfShaurma = /* html */ `button-add_${shaurmaList[i]._id}`
+    const idOfCardShaurma = /* html */ `card_${shaurmaList[i]._id}`
+    const statusShaurmaInCart = shaurmaList[i].inCart
+
+    const buttonAdd = changeStatusOfButton(statusShaurmaInCart, idOfShaurma)
 
     const cardsOfShaurma = /* html */ `
-            <div class="shaurma-cards">
-                <img src="../images/Depositphotos_73527551_l-2015-pic905-895x505-54479.jpg" class="card-img-top" alt="...">
+            <div class="shaurma-cards" id='${idOfCardShaurma}'>
+                <img id="image-shaurma" src="../images/Depositphotos_73527551_l-2015-pic905-895x505-54479.jpg" class="card-img-top" alt="...">
                 <div class="card-body bg-secondary text-center">
                     <h5 class="card-title">${nameOfShaurma}</h5> 
                     <div class="row row-cols-1 row-cols-sm-2"> 
-                        <h6 class="card-text">${randomNumber}rub</h6>    
-                        <button type="button" class="add-in-the-cart btn btn-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
-                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
-                            </svg>
-                        </button>
+                        <h6 class="card-text">${costOfShaurma}rub</h6>
+                        <div>
+                          ${buttonAdd} 
+                        </div>
                     </div>       
                 </div>
             </div>
         `
-
     listOfCards[i] = cardsOfShaurma
   }
 
   return listOfCards
 }
 
-export const loadShaurma = async () => {
-  const shaurmaList = await fetchShaurma()
+export function enableShaurmaList(onAddInCart, onDeleteInCart) {
+  if (storage.user.loggedIn) {
+    document.getElementById('main-form').addEventListener('click', (event) => {
+      onAddClick(event, onAddInCart)
+      onDeleteClick(event, onDeleteInCart)
+    })
+  }
+}
 
-  console.log(shaurmaList)
+async function onAddClick(event, onAddInCart) {
+  if (event.target.closest('.add-in-the-cart')) {
+    const shaurmaId = event.target.closest('.add-in-the-cart').id
+    // delete_
+    const splitId = shaurmaId.split('add_')
+    onAddInCart(splitId[1])
+  }
+}
 
+async function onDeleteClick(event, onDeleteInCart) {
+  if (event.target.closest('.delete-from-main')) {
+    const shaurmaId = event.target.closest('.add-in-the-cart').id
+    const splitId = shaurmaId.split('_')
+    onDeleteInCart(splitId[1])
+  }
+}
+
+export function markShaurmaItemAddedInCart(shaurmaId) {
+  const button = document.getElementById(`button-add_${shaurmaId}`)
+  button.parentElement.innerHTML = getDisabledButton(`button-add_${shaurmaId}`)
+}
+
+export function markShaurmaItemDeletedFromCart(shaurmaId) {
+  const button = document.getElementById(`button-add_${shaurmaId}`)
+  button.parentElement.innerHTML = getEnableButton(`button-add_${shaurmaId}`)
+}
+
+export function markShaurmaItemDeletedFromMain(shaurmaId) {
+  const modalCard = document.getElementById(`card_${shaurmaId}`)
+  modalCard.remove()
+}
+
+export function getShaurma(shaurmaList) {
   const shaurmaCards = createListOfCards(shaurmaList)
-
   const oneStringListOfCards = shaurmaCards.join('')
-
   return oneStringListOfCards
 }

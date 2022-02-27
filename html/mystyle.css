@@ -1,7 +1,7 @@
 #cart-element {
   width: 20px;
   height: 20px;
-  stroke: currentColor;
+  stroke: cornflowerblue;
   fill: none;
   stroke-width: 2px;
   margin-left: 15px;
@@ -12,8 +12,71 @@
   height: 20px;
 }
 
+#nameOfShaurmaAndAdditives {
+  display: flex;
+}
+
+#map-content {
+  display: flex;
+  align-items: stretch;
+}
+
+#map {
+  margin: auto;
+  height: 580px;
+  width: 680px;
+}
+
+#cart-name {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2px;
+  min-width: 0;
+  min-height: 0;
+  width: 20px;
+  height: 20px;
+}
 #navigator-type {
   justify-content: start;
+}
+#shop-cart {
+  display: flex;
+  text-decoration: none;
+  width: 190px;
+  height: 30px;
+  outline: none;
+  box-shadow: none;
+  margin-right: 20px;
+}
+
+#image-shaurma {
+  min-width: 200px;
+  max-height: 200px;
+}
+
+#modal-dialog {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  max-width: unset;
+  margin: unset;
+  height: 100%;
+}
+
+#modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 450px;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
 }
 
 #card-list {
@@ -27,14 +90,36 @@
 }
 
 #footer-of-huinya {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  margin-top: 25px;
-  margin-bottom: 25px;
+  clear: both;
+  position: relative;
+  height: 200px;
+  margin-top: auto;
 }
+
+.info-of-shaurma {
+  margin-top: 10px;
+}
+
+#info-panel {
+  width: 70%;
+}
+
+#image-container {
+  width: 30%;
+}
+
 #main-form {
   padding-top: 25px;
   padding-bottom: 25px;
+}
+
+.user-order {
+  max-height: 250px;
+  height: 160px;
+}
+
+#image-shaurma-in-order {
+  max-height: 160px;
 }
 
 #trademark {
@@ -44,6 +129,15 @@
 .add-in-the-cart {
   width: 100px;
   height: 40px;
+}
+
+.delete-from-the-cart {
+  width: 100px;
+  height: 40px;
+}
+
+.add-additive {
+  height: 35px;
 }
 
 .navbar-brand {
