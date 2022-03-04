@@ -7,6 +7,7 @@ import { fetchShaurma } from './api/fetch-array'
 import {
   addCoordonatesInOrder,
   addShaurmanInArray,
+  changeArrayOnDeleteShaurma,
   createOrderForm,
   enableDeleteShaurmaForOrder,
   enableMainWithModal,
@@ -54,6 +55,7 @@ async function addMapCoordinates(coordinates) {
 async function onDeleteInCar(shaurmaId) {
   await deleteShaurmaInUserCart({ shaurmaId })
   markDeleteShaurmaFromOrderList(shaurmaId)
+  changeArrayOnDeleteShaurma(shaurmaId)
 }
 
 async function handleClickToOpenAdditiveModal(shaurmaId) {

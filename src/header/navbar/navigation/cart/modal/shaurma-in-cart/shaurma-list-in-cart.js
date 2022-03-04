@@ -62,7 +62,7 @@ export function markShaurmaItemDeletedFromModalCart(shaurmaId) {
 
 async function onDeleteClick(event, onDeleteInCart) {
   if (event.target.closest('.delete-from-cart')) {
-    const shaurmaId = event.target.id
+    const shaurmaId = event.target.closest('.delete-from-cart').id
     // delete_
     const splitId = shaurmaId.split('_')
     onDeleteInCart(splitId[1])

@@ -56,11 +56,6 @@ export function addShaurmanInArray(shaurmaList) {
       fullInfoAboutOrder.push(shaurmaObject)
     }
   }
-  const coordinates = {
-    weight: 0,
-    heigh: 0,
-  }
-  fullInfoAboutOrder.push(coordinates)
   console.log(fullInfoAboutOrder)
 }
 
@@ -77,15 +72,25 @@ export function onChangeOrder(additiveId, eventName, shaurmaId) {
   }
 }
 
+export function changeArrayOnDeleteShaurma(shaurmaId) {
+  const chosenShaurma = fullInfoAboutOrder.find(
+    (shaurma) => shaurmaId === shaurma.shaurmaId,
+  )
+  console.log(chosenShaurma)
+}
+
 export function enableDeleteShaurmaForOrder(onDeleteInCar) {
   enableDeleteShaurma(onDeleteInCar)
 }
 
-export function addCoordonatesInOrder(coordinate) {
-  const shaurmaCoordinates = fullInfoAboutOrder[fullInfoAboutOrder.length - 1]
-  shaurmaCoordinates.weight = coordinate.weight
-  shaurmaCoordinates.heigh = coordinate.heigh
-  console.log(fullInfoAboutOrder)
+export function addCoordonatesInOrder(corordinatesForOrder) {
+  coordinates.weight = corordinatesForOrder.weight
+  coordinates.heigh = corordinatesForOrder.heigh
+  console.log(coordinates)
 }
 
 export const fullInfoAboutOrder = [] // массив в котором хранятся все данные для составления заказа
+const coordinates = {
+  weight: null,
+  heigh: null,
+}

@@ -5,7 +5,7 @@ export function createFooter() {
   const getNavigator = createNavigator()
   const getTrademark = createTrademark()
   const footerHTML = /* html */ `
-        <footer id="footer-of-huinya">
+        <footer>
             ${getNavigator}
             ${getTrademark}
         </footer>
