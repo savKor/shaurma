@@ -1,11 +1,11 @@
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
 import { createHeader } from './header'
 import { createFooter } from './footer'
+import 'mapbox-gl/dist/mapbox-gl.css'
+
 import { fetchShaurma } from './api/fetch-array'
 import {
-  addCoordonatesInOrder,
   addShaurmanInArray,
   changeArrayOnDeleteShaurma,
   createOrderForm,
@@ -17,8 +17,8 @@ import {
   onChangeOrder,
 } from './order/index'
 import { fetchAdditive } from './api/fetch-additive-array'
-import { displayMap, enableMapCoordinates } from './order/map'
 import { deleteShaurmaInUserCart } from './api/fetch-cart'
+import { displayMap } from './order/new-map'
 
 let shaurmaList = []
 let additiveList = []
@@ -45,12 +45,12 @@ async function addShaurmaInOrder() {
   addShaurmanInArray(shaurmaList)
 }
 
-async function addMapCoordinates(coordinates) {
-  coordinate.weight = coordinates[1]
-  coordinate.heigh = coordinates[0]
-  console.log(coordinate)
-  addCoordonatesInOrder(coordinate)
-}
+// async function addMapCoordinates(coordinates) {
+//   coordinate.weight = coordinates[1]
+//   coordinate.heigh = coordinates[0]
+//   console.log(coordinate)
+//   addCoordonatesInOrder(coordinate)
+// }
 
 async function onDeleteInCar(shaurmaId) {
   await deleteShaurmaInUserCart({ shaurmaId })
@@ -79,7 +79,6 @@ async function render() {
   await addShaurmaInOrder()
   enableMainWithModal(handleClickToOpenAdditiveModal)
   handleAdditiveButtonsAfterOpenModal(addAdditive)
-  enableMapCoordinates(addMapCoordinates)
   enableDeleteShaurmaForOrder(onDeleteInCar)
 }
 

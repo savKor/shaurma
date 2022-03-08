@@ -19,6 +19,7 @@ export function createOrderForm(shaurmaList) {
             </div>
             <div id='map-content'>
               <div id="map"></div>
+              <div id="map-new"></div>
             </div>
             <div class="d-grid gap-2">
                 <button class="btn btn-primary" type="button" >Оформить заказ</button>
@@ -83,11 +84,11 @@ export function enableDeleteShaurmaForOrder(onDeleteInCar) {
   enableDeleteShaurma(onDeleteInCar)
 }
 
-export function addCoordonatesInOrder(corordinatesForOrder) {
-  coordinates.weight = corordinatesForOrder.weight
-  coordinates.heigh = corordinatesForOrder.heigh
-  console.log(coordinates)
-}
+// export function addCoordonatesInOrder(corordinatesForOrder) {
+//   coordinates.weight = corordinatesForOrder.weight
+//   coordinates.heigh = corordinatesForOrder.heigh
+//   console.log(coordinates)
+// }
 
 export const fullInfoAboutOrder = [] // массив в котором хранятся все данные для составления заказа
 const coordinates = {
