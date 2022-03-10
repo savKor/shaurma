@@ -18,7 +18,7 @@ import {
 } from './order/index'
 import { fetchAdditive } from './api/fetch-additive-array'
 import { deleteShaurmaInUserCart } from './api/fetch-cart'
-import { displayMap } from './order/new-map'
+import { displayMap } from './order/map'
 
 let shaurmaList = []
 let additiveList = []

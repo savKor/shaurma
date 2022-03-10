@@ -1,30 +1,76 @@
-// let map
-// let tiles
-// let marker = {}
-// export async function displayMap() {
-//   map = L.map('map', {
-//     minZoom: 1,
-//   }).setView([51.505, -0.09], 13)
+import mapboxgl from 'mapbox-gl'
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 
-//   tiles = L.tileLayer(
-//     'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw',
-//     {
-//       maxZoom: 18,
-//       attribution:
-//         'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-//         'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-//       id: 'mapbox/streets-v11',
-//       tileSize: 512,
-//       zoomOffset: -1,
-//     },
-//   ).addTo(map)
-// }
+const coordinatesGeocoder = function geoCode(query) {
+  // Match anything which looks like
+  // decimal degrees coordinate pair.
+  const matches = query.match(
+    /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i,
+  )
+  if (!matches) {
+    return null
+  }
 
-// export function enableMapCoordinates(mapReaction) {
-//   map.on('click', (e) => {
-//     onHandleMapClick(e, mapReaction)
-//   })
-// }
+  function coordinateFeature(lng, lat) {
+    return {
+      center: [lng, lat],
+      geometry: {
+        type: 'Point',
+        coordinates: [lng, lat],
+      },
+      place_name: `Lat: ${lat} Lng: ${lng}`,
+      place_type: ['coordinate'],
+      properties: {},
+      type: 'Feature',
+    }
+  }
+
+  const coord1 = Number(matches[1])
+  const coord2 = Number(matches[2])
+  const geocodes = []
+
+  if (coord1 < -90 || coord1 > 90) {
+    // must be lng, lat
+    geocodes.push(coordinateFeature(coord1, coord2))
+  }
+
+  if (coord2 < -90 || coord2 > 90) {
+    // must be lat, lng
+    geocodes.push(coordinateFeature(coord2, coord1))
+  }
+
+  if (geocodes.length === 0) {
+    // else could be either lng, lat or lat, lng
+    geocodes.push(coordinateFeature(coord1, coord2))
+    geocodes.push(coordinateFeature(coord2, coord1))
+  }
+
+  return geocodes
+}
+
+export async function displayMap() {
+  mapboxgl.accessToken =
+    'pk.eyJ1IjoicmFmY3J1IiwiYSI6ImNrendxaGwzMzAyYTMydXJ2aHB3dzJ4OWoifQ.wj9FjHmT9tlzBVeZXdx9Sw'
+  const map = new mapboxgl.Map({
+    container: 'map', // container ID
+    style: 'mapbox://styles/mapbox/streets-v11', // style URL
+    center: [-74.5, 40], // starting position [lng, lat]
+    zoom: 9, // starting zoom
+  })
+
+  // Add the control to the map.
+  map.addControl(
+    new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      localGeocoder: coordinatesGeocoder,
+      zoom: 4,
+      placeholder: 'Try: -40, 170',
+      mapboxgl,
+      reverseGeocode: true,
+    }),
+  )
+  map.addControl(new mapboxgl.NavigationControl())
+}
 
 // function onHandleMapClick(e, mapReaction) {
 //   const lat = e.latlng.lat
@@ -32,7 +78,6 @@
 
 //   console.log(`You clicked the map at LAT: ${lat} and LONG: ${lon}`)
 //   // Clear existing marker,
-
 //   if (marker !== undefined) {
 //     map.removeLayer(marker)
 //   }
@@ -42,6 +87,8 @@
 //   mapReaction(coordinates)
 // }
 
-// export function deleteMarker() {
-//   map.removeLayer(marker)
+// export function enableMapCoordinates(mapReaction) {
+//   map.on('click', (e) => {
+//     onHandleMapClick(e, mapReaction)
+//   })
 // }

@@ -11,6 +11,7 @@ const OrderSchema = mongoose.Schema({
       additive: [{ additiveId: mongoose.Types.ObjectId, cost: Number }],
     },
   ],
+  location: {},
 })
 
 const UserOrder = mongoose.model('UserOrder', OrderSchema)
