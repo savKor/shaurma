@@ -11,6 +11,7 @@ const userRoutes = require('./routes/user')
 const shaurmaRoutes = require('./routes/shaurma')
 const cartRoutes = require('./routes/shop-cart')
 const additiveRoutes = require('./routes/additive')
+const orderRoutes = require('./routes/order')
 // Setup
 const apiServer = express()
 apiServer.set('APP_SECRET', config.secret)
@@ -39,6 +40,6 @@ apiServer.use(userRoutes)
 apiServer.use(shaurmaRoutes)
 apiServer.use(cartRoutes)
 apiServer.use(additiveRoutes)
-
+apiServer.use(orderRoutes)
 // Export
 module.exports = apiServer

@@ -11,6 +11,7 @@ import {
   createOrderForm,
   enableDeleteShaurmaForOrder,
   enableMainWithModal,
+  enableOrderYourOrder,
   handleAdditiveButtonsAfterOpenModal,
   markDeleteShaurmaFromOrderList,
   markThatModalWasOpen,
@@ -19,10 +20,12 @@ import {
 import { fetchAdditive } from './api/fetch-additive-array'
 import { deleteShaurmaInUserCart } from './api/fetch-cart'
 import { displayMap } from './order/map'
+import { addOrderToDatabase } from './api/fetch-order'
 
 let shaurmaList = []
 let additiveList = []
-const coordinate = {}
+let coordinates
+let chosenShaurmaForAdditive
 
 async function renderPageTemplate() {
   shaurmaList = await fetchShaurma()
@@ -35,10 +38,8 @@ async function renderPageTemplate() {
   document.body.insertAdjacentHTML('afterbegin', footerHTML)
   document.body.insertAdjacentHTML('afterbegin', mainHTML)
   document.body.insertAdjacentHTML('afterbegin', headerHTML)
-  await displayMap()
+  await displayMap(getCoordinates)
 }
-
-let chosenShaurmaForAdditive
 
 async function addShaurmaInOrder() {
   shaurmaList = await fetchShaurma()
@@ -68,6 +69,20 @@ async function addAdditive(additiveId, eventName) {
   onChangeOrder(additiveId, eventName, chosenShaurmaForAdditive)
 }
 
+async function handleOrderButton(shaurmaOrdered) {
+  if (coordinates !== undefined) {
+    console.log(coordinates)
+    console.log(shaurmaOrdered)
+    addOrderToDatabase({ shaurmaOrdered, coordinates })
+  }
+  // await deleteShaurmaFromMain({ fullInfoAboutOrderedShaurma, coordinates })
+}
+
+async function getCoordinates(addressCoonrdinates) {
+  coordinates = addressCoonrdinates.result
+  console.log(coordinates)
+  console.log(coordinates.id)
+}
 // async function deleteShaurmaFromCart(shaurmaId) {
 //   await deleteShaurmaInUserCart({ shaurmaId })
 //   markShaurmaItemDeletedFromCartForMain(shaurmaId)
@@ -80,8 +95,7 @@ async function render() {
   enableMainWithModal(handleClickToOpenAdditiveModal)
   handleAdditiveButtonsAfterOpenModal(addAdditive)
   enableDeleteShaurmaForOrder(onDeleteInCar)
+  enableOrderYourOrder(handleOrderButton)
 }
 
 render()
-
-console.log(window.location.href)

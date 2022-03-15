@@ -1,3 +1,4 @@
+import { storage } from '../storage'
 import {
   enableEventOpenModalOfShaurma,
   enableAdditiveAddOrDeleteOnShaurmaList,
@@ -7,22 +8,22 @@ import {
   markShaurmaItemDeletedFromOrder,
 } from './shaurma/user-shaurma-list'
 
+const fullInfoAboutOrderedShaurma = [] // массив в котором хранятся все данные для составления заказа
+
 export function createOrderForm(shaurmaList) {
   const listOfShaurma = getShaurma(shaurmaList)
   const mainHTML = /* html */ `
         <main id="main-form">
             <div class="container">
-                <ul id="card-list-of-order" class="g-3">
-                
+              <ul id="card-list-of-order" class="g-3">
                 ${listOfShaurma}
-                </ul>
+              </ul>
             </div>
             <div id='map-content'>
               <div id="map"></div>
-              <div id="map-new"></div>
             </div>
             <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="button" >Оформить заказ</button>
+              <button id="order" class="btn btn-primary" type="button" >Оформить заказ</button>
             </div>
         </main>
       `
@@ -42,7 +43,7 @@ export function handleAdditiveButtonsAfterOpenModal(onHandleButtonAdditive) {
 }
 
 export function markThatModalWasOpen(additiveList, shaurmaId) {
-  createAdditivesForModal(additiveList, shaurmaId, fullInfoAboutOrder)
+  createAdditivesForModal(additiveList, shaurmaId, fullInfoAboutOrderedShaurma)
 }
 
 export function addShaurmanInArray(shaurmaList) {
@@ -54,18 +55,19 @@ export function addShaurmanInArray(shaurmaList) {
         shaurmaId: shaurmaList[i]._id,
         additiveIdList: [],
       }
-      fullInfoAboutOrder.push(shaurmaObject)
+      fullInfoAboutOrderedShaurma.push(shaurmaObject)
     }
   }
-  console.log(fullInfoAboutOrder)
+  console.log(fullInfoAboutOrderedShaurma)
 }
 
 export function onChangeOrder(additiveId, eventName, shaurmaId) {
-  const chosenShaurma = fullInfoAboutOrder.find(
+  const chosenShaurma = fullInfoAboutOrderedShaurma.find(
     (shaurma) => shaurmaId === shaurma.shaurmaId,
   )
   if (eventName === 'add') {
     chosenShaurma.additiveIdList.push(additiveId)
+    console.log(fullInfoAboutOrderedShaurma)
   } else {
     chosenShaurma.additiveIdList = chosenShaurma.additiveIdList.filter(
       (oneOfAdditiveId) => oneOfAdditiveId !== additiveId,
@@ -74,7 +76,7 @@ export function onChangeOrder(additiveId, eventName, shaurmaId) {
 }
 
 export function changeArrayOnDeleteShaurma(shaurmaId) {
-  const chosenShaurma = fullInfoAboutOrder.find(
+  const chosenShaurma = fullInfoAboutOrderedShaurma.find(
     (shaurma) => shaurmaId === shaurma.shaurmaId,
   )
   console.log(chosenShaurma)
@@ -84,14 +86,18 @@ export function enableDeleteShaurmaForOrder(onDeleteInCar) {
   enableDeleteShaurma(onDeleteInCar)
 }
 
-// export function addCoordonatesInOrder(corordinatesForOrder) {
-//   coordinates.weight = corordinatesForOrder.weight
-//   coordinates.heigh = corordinatesForOrder.heigh
-//   console.log(coordinates)
-// }
+// функции для добавления данных о заказе в базу данных
 
-export const fullInfoAboutOrder = [] // массив в котором хранятся все данные для составления заказа
-const coordinates = {
-  weight: null,
-  heigh: null,
+export function enableOrderYourOrder(onOrderButton) {
+  if (storage.user.loggedIn) {
+    document.getElementById('order').addEventListener('click', () => {
+      onAddClick(onOrderButton)
+    })
+  }
+}
+
+async function onAddClick(onOrderButton) {
+  if (fullInfoAboutOrderedShaurma !== []) {
+    onOrderButton(fullInfoAboutOrderedShaurma)
+  }
 }

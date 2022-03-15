@@ -1,6 +1,9 @@
 import mapboxgl from 'mapbox-gl'
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder'
 
+let addressCoonrdinates
+let geocoder
+
 const coordinatesGeocoder = function geoCode(query) {
   // Match anything which looks like
   // decimal degrees coordinate pair.
@@ -48,7 +51,7 @@ const coordinatesGeocoder = function geoCode(query) {
   return geocodes
 }
 
-export async function displayMap() {
+export async function displayMap(getCoordinates) {
   mapboxgl.accessToken =
     'pk.eyJ1IjoicmFmY3J1IiwiYSI6ImNrendxaGwzMzAyYTMydXJ2aHB3dzJ4OWoifQ.wj9FjHmT9tlzBVeZXdx9Sw'
   const map = new mapboxgl.Map({
@@ -59,30 +62,34 @@ export async function displayMap() {
   })
 
   // Add the control to the map.
-  map.addControl(
-    new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      localGeocoder: coordinatesGeocoder,
-      zoom: 4,
-      placeholder: 'Try: -40, 170',
-      mapboxgl,
-      reverseGeocode: true,
-    }),
-  )
-  map.addControl(new mapboxgl.NavigationControl())
+
+  geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    localGeocoder: coordinatesGeocoder,
+    zoom: 4,
+    placeholder: 'Try: -40, 170',
+    mapboxgl,
+    reverseGeocode: true,
+  }).on('result', (selected) => {
+    addressCoonrdinates = selected
+    getCoordinates(addressCoonrdinates)
+    console.log('Selected geo: ', addressCoonrdinates)
+  })
+
+  map.addControl(geocoder)
 }
 
+// let marker
 // function onHandleMapClick(e, mapReaction) {
-//   const lat = e.latlng.lat
-//   const lon = e.latlng.lng
-
-//   console.log(`You clicked the map at LAT: ${lat} and LONG: ${lon}`)
+//   const lat = e.lngLat.lat
+//   const lng = e.lngLat.lng
+//   console.log(`You clicked the map at LAT: ${lat} and LONG: ${lng}`)
 //   // Clear existing marker,
 //   if (marker !== undefined) {
-//     map.removeLayer(marker)
+//     marker.remove()
 //   }
-//   marker = L.marker(e.latlng).addTo(map)
-//   marker.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup()
+//   marker = new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map)
+//   console.log(marker)
 //   const coordinates = [e.latlng.lat, e.latlng.lng]
 //   mapReaction(coordinates)
 // }

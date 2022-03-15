@@ -4,16 +4,25 @@ const mongoose = require('mongoose')
 const OrderSchema = mongoose.Schema({
   userId: mongoose.Types.ObjectId,
   cost: Number,
+  location: {
+    idLocation: String,
+    placeName: String,
+    placeNameRu: String,
+    properties: {
+      address: String,
+      category: String,
+      foursquare: String,
+      landmark: Boolean,
+    },
+  },
   shaurmaList: [
     {
-      shaurmanID: mongoose.Types.ObjectId,
-      cost: Number,
-      additive: [{ additiveId: mongoose.Types.ObjectId, cost: Number }],
+      shaurmanId: mongoose.Types.ObjectId,
+      additiveId: [mongoose.Types.ObjectId],
     },
   ],
-  location: {},
 })
 
-const UserOrder = mongoose.model('UserOrder', OrderSchema)
+const UserOrder = mongoose.model('order', OrderSchema)
 
 module.exports = UserOrder
