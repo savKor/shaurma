@@ -14,31 +14,22 @@ orderRoutes.post('/order', async (request, response) => {
   }
   const userToken = request.get('x-access-token')
   const decoded = jwtDecode(userToken)
+
   const orderedShaurman = request.body.shaurmaOrdered
+
+  const orderCoordinates = request.body.coordinates
 
   // Save into database
   const cartShaurma = {
     userId: mongoose.Types.ObjectId(decoded._id),
-    cost: Number,
     location: {
-      idLocation: String,
-      placeName: String,
-      placeNameRu: String,
-      properties: {
-        address: String,
-        category: String,
-        foursquare: String,
-        landmark: Boolean,
-      },
+      idLocation: orderCoordinates.id,
+      placeName: orderCoordinates.place_name,
     },
     shaurmaList: [
       {
-        shaurmanId: mongoose.Types.ObjectId(
-          request.body.shaurmaOrdered.shaurmaId,
-        ),
-        additiveId: [
-          mongoose.Types.ObjectId(request.body.shaurmaOrdered.additiveIdList),
-        ],
+        shaurmanId: mongoose.Types.ObjectId(orderedShaurman.shaurmaId),
+        additiveId: [mongoose.Types.ObjectId(orderedShaurman.additiveIdList)],
       },
     ],
   }

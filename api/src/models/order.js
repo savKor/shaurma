@@ -7,13 +7,6 @@ const OrderSchema = mongoose.Schema({
   location: {
     idLocation: String,
     placeName: String,
-    placeNameRu: String,
-    properties: {
-      address: String,
-      category: String,
-      foursquare: String,
-      landmark: Boolean,
-    },
   },
   shaurmaList: [
     {
@@ -23,6 +16,6 @@ const OrderSchema = mongoose.Schema({
   ],
 })
 
-const UserOrder = mongoose.model('order', OrderSchema)
+const UserOrder = mongoose.model('orders', OrderSchema)
 
 module.exports = UserOrder
