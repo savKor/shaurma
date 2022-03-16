@@ -15,9 +15,11 @@ orderRoutes.post('/order', async (request, response) => {
   const userToken = request.get('x-access-token')
   const decoded = jwtDecode(userToken)
 
-  const orderedShaurman = request.body.shaurmaOrdered
+  const orderedShaurma = request.body.shaurmaOrdered
 
   const orderCoordinates = request.body.coordinates
+
+  for (let i = 0; i < orderedShaurma; i++) {}
 
   // Save into database
   const cartShaurma = {
@@ -28,8 +30,8 @@ orderRoutes.post('/order', async (request, response) => {
     },
     shaurmaList: [
       {
-        shaurmanId: mongoose.Types.ObjectId(orderedShaurman.shaurmaId),
-        additiveId: [mongoose.Types.ObjectId(orderedShaurman.additiveIdList)],
+        shaurmanId: mongoose.Types.ObjectId(orderedShaurma.shaurmaId),
+        additiveId: [mongoose.Types.ObjectId(orderedShaurma.additiveIdList)],
       },
     ],
   }
