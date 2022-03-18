@@ -10,7 +10,7 @@ const OrderSchema = mongoose.Schema({
   },
   shaurmaList: [
     {
-      shaurmanId: mongoose.Types.ObjectId,
+      shaurmaId: mongoose.Types.ObjectId,
       additiveId: [mongoose.Types.ObjectId],
     },
   ],

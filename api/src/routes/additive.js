@@ -16,7 +16,6 @@ async function getAdditiveList() {
 
 additiveRoutes.get('/additive', async (request, response) => {
   const additiveList = await getAdditiveList()
-  console.log(additiveList)
   response.send(additiveList)
 })
 

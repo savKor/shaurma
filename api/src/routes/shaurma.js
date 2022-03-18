@@ -47,7 +47,6 @@ shaurmaRoutes.get('/shaurma-list', async (request, response) => {
       createdAt,
       inCart: userShaurmaAddedInCart.includes(shaurmaItem.id),
     }
-    console.log(newShaurmaItem)
     return newShaurmaItem
   })
 
@@ -63,6 +62,7 @@ shaurmaRoutes.post('/shaurma-list/deleted', async (request, response) => {
 
   const userShaurmaAddedInCart = request.body.shaurmaId
   const document = await Shaurma.findOne({ _id: userShaurmaAddedInCart })
+  console.log(document)
   if (document) {
     Shaurma.deleteOne(
       { _id: mongoose.Types.ObjectId(userShaurmaAddedInCart) },

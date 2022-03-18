@@ -57,7 +57,7 @@ async function onAddClick(event, onAddInCart) {
 
 async function onDeleteClick(event, onDeleteInCart) {
   if (event.target.closest('.delete-from-main')) {
-    const shaurmaId = event.target.closest('.add-in-the-cart').id
+    const shaurmaId = event.target.closest('.delete-from-main').id
     const splitId = shaurmaId.split('_')
     onDeleteInCart(splitId[1])
   }
