@@ -80,38 +80,26 @@ orderRoutes.post('/order', async (request, response) => {
     return document
   }
 
-  async function calculateCost() {
-    console.log(orderedShaurma)
-    const shaurma = await getShaurma()
-    const additive = await getAdditive()
-
+  async function calculateCost(shaurma, additive) {
     let cost = 0
     for (let i = 0; i < orderedShaurma.length; i++) {
       const shaurmaCost = shaurma[i].cost
       const additiveCost = getAdditiveCost(additive, orderedShaurma[i])
       cost += additiveCost + shaurmaCost
     }
-
     return cost
   }
 
-  // function getCost() {
-  //   for (let i = 0; i < orderedShaurma.length; i++) {
-  //     console.log(orderedShaurma.length)
-  //     const shaurmaCost = shaurma[i].cost
-  //     console.log(shaurmaCost)
-  //     const additiveCost = getAdditiveCost(additive, orderedShaurma[i])
-  //     console.log(additiveCost)
-  //     cost.push(shaurmaCost, additiveCost)
-  //   }
-  //   return cost
-  // }
+  async function getCost() {
+    const shaurma = await getShaurma()
+    const additive = await getAdditive()
+    const cost = calculateCost(shaurma, additive)
+    return cost
+  }
 
   function getAdditiveCost(additive, orderedAdditive) {
-    let additiveCost
-    if (orderedAdditive.additiveIdList.length === 0) {
-      additiveCost = 0
-    } else {
+    let additiveCost = 0
+    if (orderedAdditive.additiveIdList.length !== 0) {
       for (let i = 0; i < orderedAdditive.additiveIdList.length; i++) {
         if (additive[i].cost === undefined) {
           additiveCost = 0
@@ -124,9 +112,9 @@ orderRoutes.post('/order', async (request, response) => {
   }
 
   // Save into database
-  const cartShaurma = {
+  const orderShaurma = {
     userId: mongoose.Types.ObjectId(decoded._id),
-    cost: await calculateCost(),
+    cost: await getCost(),
     location: {
       idLocation: orderCoordinates.id,
       placeName: orderCoordinates.place_name,
@@ -134,9 +122,9 @@ orderRoutes.post('/order', async (request, response) => {
     shaurmaList: fullShaurmaOrderList,
   }
 
-  console.log(cartShaurma)
+  console.log(orderShaurma)
 
-  OrderShaurma.create(cartShaurma, (err, documentCreate) => {
+  OrderShaurma.create(orderShaurma, (err, documentCreate) => {
     const orderId = documentCreate._id
     if (orderId) {
       responseData.success = true
