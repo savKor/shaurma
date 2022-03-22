@@ -72,8 +72,8 @@ orderRoutes.post('/order', async (request, response) => {
 
   async function addAdditive(orderedAdditive) {
     const id = []
-    for (let j = 0; j < orderedAdditive.additiveIdList.length; j++) {
-      const additive = orderedAdditive.additiveIdList[j]
+    for (let i = 0; i < orderedAdditive.additiveIdList.length; i++) {
+      const additive = orderedAdditive.additiveIdList[i]
       id.push(additive)
     }
     const document = await Additive.find({ _id: { $in: id } })
@@ -84,7 +84,10 @@ orderRoutes.post('/order', async (request, response) => {
     let cost = 0
     for (let i = 0; i < orderedShaurma.length; i++) {
       const shaurmaCost = shaurma[i].cost
-      const additiveCost = getAdditiveCost(additive, orderedShaurma[i])
+      const additiveCost = getAdditiveListCost(
+        additive[i],
+        orderedShaurma[i].additiveIdList,
+      )
       cost += additiveCost + shaurmaCost
     }
     return cost
@@ -97,15 +100,11 @@ orderRoutes.post('/order', async (request, response) => {
     return cost
   }
 
-  function getAdditiveCost(additive, orderedAdditive) {
+  function getAdditiveListCost(orderedAdditive) {
     let additiveCost = 0
-    if (orderedAdditive.additiveIdList.length !== 0) {
-      for (let i = 0; i < orderedAdditive.additiveIdList.length; i++) {
-        if (additive[i].cost === undefined) {
-          additiveCost = 0
-        } else {
-          additiveCost = +additive[i].cost
-        }
+    if (orderedAdditive.length !== 0) {
+      for (let i = 0; i < orderedAdditive.length; i++) {
+        additiveCost += orderedAdditive[i].cost
       }
     }
     return additiveCost
