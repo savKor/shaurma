@@ -80,25 +80,45 @@ orderRoutes.post('/order', async (request, response) => {
     return document
   }
 
-  async function calculationOfCost() {
+  async function calculateCost() {
+    console.log(orderedShaurma)
     const shaurma = await getShaurma()
     const additive = await getAdditive()
 
-    const cost = 0
+    let cost = 0
     for (let i = 0; i < orderedShaurma.length; i++) {
       const shaurmaCost = shaurma[i].cost
-      cost = +shaurmaCost
-      const additiveCost = calculateAdditiveCost(additive, orderedShaurma[i])
-      cost = +additiveCost
+      const additiveCost = getAdditiveCost(additive, orderedShaurma[i])
+      cost += additiveCost + shaurmaCost
     }
+
     return cost
   }
 
-  console.log(await calculationOfCost())
-  function calculateAdditiveCost(additive, orderedAdditive) {
+  // function getCost() {
+  //   for (let i = 0; i < orderedShaurma.length; i++) {
+  //     console.log(orderedShaurma.length)
+  //     const shaurmaCost = shaurma[i].cost
+  //     console.log(shaurmaCost)
+  //     const additiveCost = getAdditiveCost(additive, orderedShaurma[i])
+  //     console.log(additiveCost)
+  //     cost.push(shaurmaCost, additiveCost)
+  //   }
+  //   return cost
+  // }
+
+  function getAdditiveCost(additive, orderedAdditive) {
     let additiveCost
-    for (let i = 0; i < orderedAdditive.additiveIdList.length; i++) {
-      additiveCost = +additive[i].cost
+    if (orderedAdditive.additiveIdList.length === 0) {
+      additiveCost = 0
+    } else {
+      for (let i = 0; i < orderedAdditive.additiveIdList.length; i++) {
+        if (additive[i].cost === undefined) {
+          additiveCost = 0
+        } else {
+          additiveCost = +additive[i].cost
+        }
+      }
     }
     return additiveCost
   }
@@ -106,6 +126,7 @@ orderRoutes.post('/order', async (request, response) => {
   // Save into database
   const cartShaurma = {
     userId: mongoose.Types.ObjectId(decoded._id),
+    cost: await calculateCost(),
     location: {
       idLocation: orderCoordinates.id,
       placeName: orderCoordinates.place_name,
